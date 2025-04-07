@@ -1,6 +1,11 @@
 datasource:
   url: mysql+pymysql://root:root@localhost:3306/fastapi
   maxPool: 100
+  poolRecycle: 3600 #Recycle connections after 1 hour
+  poolPrePing: True #Check connections before using them
+  maxOverflow: 20 #Allow up to 20 extra connections beyond pool size
+  poolTimeout: 30 #Wait up to 30 seconds for a connection from the pool
+
 
 esewaUrl:
   esewaMF: http://10.13.194.23:7080

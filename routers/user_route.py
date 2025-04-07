@@ -20,3 +20,6 @@ def users(user_service: UserService = Depends()):
 def find(user_id: int, user_service: UserService = Depends()):
     return user_service.find(user_id)
 
+@router.post("/{user_id}", response_model=UserDto)
+def validate(user_id: int, user_service: UserService = Depends()):
+    return user_service.validate(user_id)

@@ -1,5 +1,4 @@
 from http import HTTPStatus
-from logging import exception
 
 from fastapi.params import Depends
 
