@@ -19,10 +19,10 @@ SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
 Base = declarative_base()
 
 def get_db():
-    db = SessionLocal()
+    db = SessionLocal()  # Create a new database session
     try:
-        yield db
+        yield db  # Provide the session to the dependent function
     finally:
-        db.close()
+        db.close()  # Close the session after use
 
 db_dependency = Annotated[Session, Depends(get_db)]

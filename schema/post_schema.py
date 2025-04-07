@@ -3,7 +3,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey
 from configuration.database import Base
 
 
-class Post(Base):
+class PostSchema(Base):
     __tablename__ = "post"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)

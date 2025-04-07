@@ -1,0 +1,15 @@
+datasource:
+  url: mysql+pymysql://root:root@localhost:3306/fastapi
+  maxPool: 100
+
+esewaUrl:
+  esewaMF: http://10.13.194.23:7080
+  customer: http://10.13.194.23:1080
+
+resttemplate:
+  default:
+    connectTimeout: 30000
+    socketTimeout: 30000
+    maxPerRoute: 25
+    maxTotalConnection: 100
+

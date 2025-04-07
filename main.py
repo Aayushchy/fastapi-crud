@@ -2,16 +2,17 @@ from fastapi import FastAPI
 
 from configuration.database import Base
 from configuration.database import engine
+from exception.exception_handler import register_exception_handlers
+from routers import routers
 
-from routers.user_route import router as user_router
-from routers.post_route import router as post_router
-
-# from schema import user
-# from schema import post
-
+#Reading from config.yml file, Logging, Rest API call
 app = FastAPI()
+
 Base.metadata.create_all(bind=engine)
 
-app.include_router(user_router)
-app.include_router(post_router)
+#Registering exception handler
+register_exception_handlers(app)
 
+#Importing all routers
+for router in routers:
+    app.include_router(router)

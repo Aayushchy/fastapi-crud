@@ -1,18 +1,22 @@
-from fastapi import APIRouter
+from typing import List
 
-import schema.user as user_schema
-from configuration.database import db_dependency
-from models.user import UserDto
+from fastapi import APIRouter, Depends
 
-router = APIRouter(
-    prefix="/user",
-    tags=["users"]
-)
+from models.user_dto import UserDto
+from service.user_service import UserService
+
+router = APIRouter(prefix="/user", tags=["users"])
 
 
-@router.post("/create")
-async def create_user(user: UserDto, db: db_dependency):
-    user_db = user_schema.User(name=user.name, email=user.email)
-    db.add(user_db)
-    db.commit()
-    return {"message": "User created successfully"}
+@router.post("/create", response_model=UserDto)
+def create(user: UserDto, user_service: UserService = Depends()):
+    return user_service.create(user)
+
+@router.get("/all", response_model=List[UserDto])
+def users(user_service: UserService = Depends()):
+    return user_service.get_all()
+
+@router.get("/{user_id}", response_model=UserDto)
+def find(user_id: int, user_service: UserService = Depends()):
+    return user_service.find(user_id)
+
