@@ -10,9 +10,8 @@ from configuration.config_constants import ConfigConstants
 
 
 class Database:
-    def __init__(self, config_path: str = "config.yml"):
-        self.config_loader = ConfigLoader(config_path)
-        self.config = self.config_loader._load_config()
+    def __init__(self):
+        self.config = ConfigLoader.get_config()
         self.engine = self._create_engine()
         self.session_local = sessionmaker(bind=self.engine, autocommit=False, autoflush=False)
         self.base = declarative_base()

@@ -1,36 +1,50 @@
+import logging
+from http import HTTPStatus
+
 import yaml
 import os
 
-class ConfigLoader:
-    def __init__(self, config_path: str):
-        self.config_path = config_path
-        self.config = self._load_config()
+from exception.generic_exception import GenericException
 
-    def _load_config(self):
-        """
+
+class ConfigLoader:
+    config_path = 'C:\\Users\\ThinkPad\\Documents\\Projects\\conf\\config.yml'
+
+    def __init__(self):
+        # Load the configuration when the class is instantiated
+        self.config = self.load_config()
+
+    """
         Load the YAML configuration file.
         Raises an exception if the file cannot be read or parsed.
-        """
-        if not os.path.exists(self.config_path):
-            raise FileNotFoundError(f"Configuration file not found: {self.config_path}")
+    """
+    @staticmethod
+    def load_config():
+
+        if not os.path.exists(ConfigLoader.config_path):
+            logging.error(f"Configuration file not found: {ConfigLoader.config_path}")
+            raise FileNotFoundError(f"Configuration file not found: {ConfigLoader.config_path}")
 
         try:
-            with open(self.config_path, "r") as file:
+            with open(ConfigLoader.config_path, "r") as file:
                 return yaml.safe_load(file)
-        except yaml.YAMLError as e:
-            raise Exception(f"Error parsing YAML file: {e}")
         except Exception as e:
-            raise Exception(f"Error loading configuration file: {e}")
+            logging.error(f"Error loading configuration file: {e}")
+            raise GenericException(HTTPStatus.SERVICE_UNAVAILABLE,
+                                   f"Error loading configuration file: {ConfigLoader.config_path}",
+                                   "Service is currently unavailable")
 
-    def get_property(self, key: str):
-        """
-        Get a property from the loaded configuration.
-        Raises an exception if the key is not found.
-        """
-        keys = key.split(".")
-        value = self.config
-        for k in keys:
-            value = value.get(k)
-            if value is None:
-                raise KeyError(f"Configuration key not found: {key}")
-        return value
+    @staticmethod
+    def get_config():
+        # Get loaded configuration
+        return ConfigLoader().config
+
+        # def get_property(self, key: str):
+    #     Get a property from the loaded configuration.
+    #     keys = key.split(".")
+    #     value = self.config
+    #     for k in keys:
+    #         value = value.get(k)
+    #         if value is None:
+    #             raise KeyError(f"Configuration key not found: {key}")
+    #     return value
