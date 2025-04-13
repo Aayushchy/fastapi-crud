@@ -3,7 +3,7 @@ from http import HTTPStatus
 from fastapi.params import Depends
 
 from caller.mf_caller import MfCaller
-# from caller.mf_caller import MfCaller
+from configuration.logging_config import logger
 from exception.generic_exception import GenericException
 from models.user_dto import UserDto
 from repositories.user_repository import UserRepository
@@ -28,6 +28,7 @@ class UserService:
             raise GenericException(HTTPStatus.BAD_REQUEST, "User not found", "Service is currently unavailable")
         return user
 
-    def get_active_plan(self, product_code: str, include_hierarchy: bool, internal_identifier: str):
-        plan = self.mf_caller.get_active_plan(product_code, include_hierarchy, internal_identifier)
+    async def get_active_plan(self, product_code: str, include_hierarchy: bool, internal_identifier: str):
+        plan = await self.mf_caller.get_active_plan(product_code, include_hierarchy, internal_identifier)
+        logger.info("Active plan: %s", plan)
         return plan

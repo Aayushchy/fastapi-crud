@@ -1,6 +1,9 @@
+from http import HTTPStatus
+
 from fastapi import Depends
 from httpx import AsyncClient
 from config_loader import ConfigLoader
+from exception.generic_exception import GenericException
 from http_client_configuration.http_client_mf import MfHttpClientConfig
 
 class MfCaller:
@@ -17,5 +20,7 @@ class MfCaller:
             "internalIdentifier": internal_identifier,
         }
         response = await self.http_client.get(url, params=params)
+        if response.status_code != 200:
+            raise GenericException(HTTPStatus.SERVICE_UNAVAILABLE, response.text, "Service is currently not available")
         # response.raise_for_status()
         return response.json()
